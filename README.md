@@ -23,5 +23,9 @@ OR
 bun run dev
 
 
+# to install tailwind
+bun add tailwindcss @tailwindcss/vite
+
+
 
 

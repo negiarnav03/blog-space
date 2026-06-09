@@ -1,16 +1,34 @@
-
+import { useState, useEffect } from 'react'
 import './App.css'
-import config from './config/config'
+import { useDispatch } from 'react-redux'
+import authService from './appwrite/auth.js'
+import { login, logout } from './store/authSlice.js'
 
 function App() {
   
-  console.log(config.appwriteUrl)
+  const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
 
-  return (
-    <>
-    <h1> A blog app that is yet to be built</h1>
-    </>
-  )
+  useEffect(() => {
+    authService.getCurrentUser()
+    .then((userData) => {
+      if(userData){
+        dispatch(login({userData}))
+      } else {
+        dispatch(logout())
+      }
+    })
+    .finally(() => {
+      setLoading(false)
+    })
+  }, [])
+
+
+  return !loading ? (
+    <div >
+
+    </div>
+  ) : null
 }
 
 export default App
