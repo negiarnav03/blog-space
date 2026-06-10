@@ -5,6 +5,8 @@ import Logo from "./Logo";
 import LogoutBtn from "./header/LogoutBtn";
 import Button from "./Button";
 import Input from "./Input";
+import Select from "./Select";
+import PostCard from "./PostCard";
 
 
 export {
@@ -14,5 +16,7 @@ export {
     LogoutBtn,
     Container,
     Button,
-    Input
+    Input,
+    Select,
+    PostCard
 } 
