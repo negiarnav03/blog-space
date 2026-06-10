@@ -15,7 +15,7 @@ function App() {
       .getCurrentUser()
       .then((userData) => {
         if (userData) {
-          dispatch(login(userData));
+          dispatch(login(JSON.parse(JSON.stringify(userData))));
         } else {
           dispatch(logout());
         }
@@ -29,7 +29,9 @@ function App() {
     <div className="min-h-screen flex flex-wrap content-between bg-grey-400 ">
       <div className="w-full block">
         <Header />
-        <main>TODO: {/* <Outlet /> */}</main>
+        <main>
+           <Outlet />
+        </main>
         <Footer />
       </div>
     </div>

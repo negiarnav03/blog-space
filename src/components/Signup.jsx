@@ -4,13 +4,15 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../appwrite/auth";
 import { login as authLogin } from "../store/authSlice";
-import { Button, Input, Logo } from "./index";
+import Button from "./Button";
+import Input from "./Input";
+import Logo from "./Logo";
 
 function Signup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   const create = async (data) => {
     setError("");
@@ -18,7 +20,7 @@ function Signup() {
       const userData = await authService.createAccount(data);
       if (userData) {
         const userData = await authService.getCurrentUser();
-        if (userData) dispatch(authLogin(userData));
+        if (userData) dispatch(authLogin(JSON.parse(JSON.stringify(userData))));
         navigate("/");
       }
     } catch (error) {
@@ -55,41 +57,66 @@ function Signup() {
 
         <form onSubmit={handleSubmit(create)} className="mt-8">
           <div className="space-y-5">
-            <Input
-              label="Full Name: "
-              placeholder="Enter your full name"
-              type="text"
-              {...register("name", {
-                required: true,
-              })}
-            />
+            <div>
+              <Input
+                label="Full Name: "
+                placeholder="Enter your full name"
+                type="text"
+                autoComplete="name"
+                {...register("name", {
+                  required: true,
+                })}
+              />
+              {errors.name && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Name is required
+                </span>
+              )}
+            </div>
 
-            <Input
-              label="Email: "
-              placeholder="Enter your email"
-              type="email"
-              {...register("email", {
-                required: true,
-                validate: {
-                  matchPattern: (value) =>
-                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-                    "Email address must be valid",
-                },
-              })}
-            />
-            <Input
-              label="Password: "
-              type="password"
-              placeholder="Create a password"
-              {...register("password", {
-                required: true,
-                validate: {
-                  minLength: (value) =>
-                    value.length >= 8 ||
-                    "Password must be at least 8 characters",
-                },
-              })}
-            />
+            <div>
+              <Input
+                label="Email: "
+                placeholder="Enter your email"
+                type="email"
+                autoComplete="email"
+                {...register("email", {
+                  required: true,
+                  validate: {
+                    matchPattern: (value) =>
+                      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
+                      "Email address must be valid",
+                  },
+                })}
+              />
+              {errors.email && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  {errors.email.message || "Email is required"}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <Input
+                label="Password: "
+                type="password"
+                placeholder="Create a password"
+                autoComplete="new-password"
+                {...register("password", {
+                  required: true,
+                  validate: {
+                    minLength: (value) =>
+                      value.length >= 8 ||
+                      "Password must be at least 8 characters",
+                  },
+                })}
+              />
+              {errors.password && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  {errors.password.message || "Password is required"}
+                </span>
+              )}
+            </div>
 
             <Button type="submit" className="w-full">
               Create Account

@@ -106,7 +106,6 @@ export class Service{
                 ID.unique(),
                 file
             );
-            return fileId;
         } catch (error) {
             console.error("Appwrite servie :: uploadFile :: error", error);
             return false;

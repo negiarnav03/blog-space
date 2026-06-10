@@ -10,7 +10,7 @@ import { Button, Input, Logo } from "./index";
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [error, setError] = useState("");
 
   const login = async (data) => {
@@ -19,7 +19,7 @@ function Login() {
       const session = await authService.login(data);
       if (session) {
         const userData = await authService.getCurrentUser();
-        if (userData) dispatch(authLogin(userData));
+        if (userData) dispatch(authLogin(JSON.parse(JSON.stringify(userData))));
         navigate("/");
       }
     } catch (error) {
@@ -55,29 +55,45 @@ function Login() {
 
         <form onSubmit={handleSubmit(login)} className="mt-8">
           <div className="space-y-5">
-            <Input
-              label="Email: "
-              placeholder="Enter your email"
-              type="email"
-              {...register("email", {
-                required: true,
-                validate: {
-                  matchPattern: (value) =>
-                    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-                      value,
-                    ) || "Please enter a valid email",
-                },
-              })}
-            />
+            <div>
+              <Input
+                label="Email: "
+                placeholder="Enter your email"
+                type="email"
+                autoComplete="email"
+                {...register("email", {
+                  required: true,
+                  validate: {
+                    matchPattern: (value) =>
+                      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+                        value,
+                      ) || "Please enter a valid email",
+                  },
+                })}
+              />
+              {errors.email && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  {errors.email.message || "Email is required"}
+                </span>
+              )}
+            </div>
 
-            <Input
-              label="password: "
-              placeholder="Enter your password"
-              type="password"
-              {...register("password", {
-                required: true,
-              })}
-            />
+            <div>
+              <Input
+                label="password: "
+                placeholder="Enter your password"
+                type="password"
+                autoComplete="current-password"
+                {...register("password", {
+                  required: true,
+                })}
+              />
+              {errors.password && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  Password is required
+                </span>
+              )}
+            </div>
             <Button type="submit" className="w-full">
               Sign In
             </Button>
