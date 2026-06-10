@@ -11,9 +11,8 @@ function Input({
     label,
     type="text",
     className="",
-    ...props,
-    ref
-    
+    ref,
+    ...props
 })
 
 {
