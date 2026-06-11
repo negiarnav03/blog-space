@@ -26,10 +26,10 @@ function App() {
   }, []);
 
   return !loading ? (
-    <div className="min-h-screen flex flex-wrap content-between bg-grey-400 ">
-      <div className="w-full block">
+    <div className="min-h-screen flex flex-col bg-[var(--bg)] text-[var(--text)]">
+      <div className="w-full flex flex-col min-h-screen">
         <Header />
-        <main>
+        <main className="flex-grow py-8 w-full max-w-7xl mx-auto px-4">
            <Outlet />
         </main>
         <Footer />
